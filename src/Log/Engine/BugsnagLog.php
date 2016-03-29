@@ -104,7 +104,7 @@ class BugsnagLog extends BaseLog
      */
     public function log($level, $message, array $context = [])
     {
-        $level = array_key_exists($this->_levels[$level]) ? $this->_levels[$level] : 'info';
+        $level = !isset($this->_levels[$level]) ? $this->_levels[$level] : 'info';
         $this->_client->notifyError(ucfirst($level), $message, $context, $level);
     }
 }
