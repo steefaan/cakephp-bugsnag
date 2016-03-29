@@ -24,8 +24,28 @@ class BugsnagLog extends BaseLog
      * @var array
      */
     protected $_defaultConfig = [
-        'levels' => [],
+        'levels' => [
+            'error',
+            'warning',
+            'info'
+        ],
         'scopes' => []
+    ];
+
+    /**
+     * Bugsnag doesn't support all levels.
+     *
+     * @var array
+     */
+    protected $_levels = [
+        'emergency' => 'error',
+        'alert' => 'error',
+        'critical' => 'error',
+        'error' => 'error',
+        'warning' => 'warning',
+        'notice' => 'warning',
+        'info' => 'info',
+        'debug' => 'info'
     ];
 
     /**
@@ -84,6 +104,7 @@ class BugsnagLog extends BaseLog
      */
     public function log($level, $message, array $context = [])
     {
+        $level = array_key_exists($this->_levels[$level]) ? $this->_levels[$level] : 'info';
         $this->_client->notifyError(ucfirst($level), $message, $context, $level);
     }
 }
