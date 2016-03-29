@@ -65,11 +65,11 @@ class BugsnagLogTest extends TestCase
     }
 
     /**
-     * BugsnagLogTest::testMissingConfig()
+     * BugsnagLogTest::testInvalidConfig()
      *
      * @return void
      */
-    public function testMissingConfig()
+    public function testInvalidConfig()
     {
         $engine = new BugsnagLog([
             'missingOption' => true
@@ -82,19 +82,6 @@ class BugsnagLogTest extends TestCase
         $config = $this->getProtectedProperty('config', $client);
 
         $this->assertTrue(!isset($config->missingOption));
-    }
-
-    /**
-     * BugsnagLogTest::testInvalidConfig()
-     *
-     * @expectedException TypeError
-     * @return void
-     */
-    public function testInvalidConfig()
-    {
-        new BugsnagLog([
-            'filters' => 'invalidOption'
-        ]);
     }
 
     /**
