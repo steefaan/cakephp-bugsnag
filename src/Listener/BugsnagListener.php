@@ -20,7 +20,7 @@ class BugsnagListener implements EventListenerInterface
     }
 
     /**
-     * Format stacktrace
+     * Format stacktrace.
      *
      * @param \Cake\Event\Event $event
      * @return void
