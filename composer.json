@@ -1,0 +1,40 @@
+{
+    "name": "steefaan/cakephp-bugsnag",
+    "type": "cakephp-plugin",
+    "description": "Bugsnag log engine for CakePHP.",
+    "keywords": [
+        "cakephp",
+        "bugsnag"
+    ],
+    "homepage": "http://github.com/steefaan/cakephp-bugsnag",
+    "authors": [
+        {
+            "name": "Stefan Dickmann",
+            "role": "Author"
+        }
+    ],
+    "license": "MIT",
+    "support": {
+        "source": "https://github.com/steefaan/cakephp-bugsnag",
+        "issues": "https://github.com/steefaan/cakephp-bugsnag/issues"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "cakephp/cakephp": "~3.0",
+        "bugsnag/bugsnag": "2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.1.*",
+        "friendsofcake/cakephp-test-utilities": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bugsnag\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bugsnag\\Test\\": "tests"
+        }
+    }
+}
