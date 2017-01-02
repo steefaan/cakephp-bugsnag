@@ -1,6 +1,6 @@
 <?php
 
-namespace Bugsnag\Test\TestCase\Log\Engine;
+namespace Steefaan\Bugsnag\Test\TestCase\Log\Engine;
 
 use Bugsnag\Log\Engine\BugsnagLog;
 use Cake\Core\Configure;
