@@ -5,12 +5,16 @@ namespace Steefaan\Bugsnag;
 use Bugsnag\Client;
 use Bugsnag\Report;
 use Bugsnag\Handler;
-use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 
 class BugsnagFactory
 {
+    /**
+     * @var \Bugsnag\Client
+     */
+    protected static $_bugsnag;
+
     /**
      * @var bool
      */
@@ -24,6 +28,7 @@ class BugsnagFactory
     /**
      * BugsnagFactory constructor.
      * @param bool $notify
+     * @param array $config
      */
     public function __construct($notify, array $config = [])
     {
@@ -44,6 +49,10 @@ class BugsnagFactory
      */
     public function factory()
     {
+        if (self::$_bugsnag instanceof Client) {
+            return self::$_bugsnag;
+        }
+
         $bugsnag = Client::make($this->_config['apiKey']);
 
         $bugsnagConfiguration = $bugsnag->getConfig();
@@ -62,6 +71,6 @@ class BugsnagFactory
             Handler::register($bugsnag);
         }
 
-        return $bugsnag;
+        return self::$_bugsnag = $bugsnag;
     }
 }

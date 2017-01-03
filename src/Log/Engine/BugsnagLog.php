@@ -55,17 +55,14 @@ class BugsnagLog extends BaseLog
     protected $_bugsnag = null;
 
     /**
-     * Constructor.
-     *
+     * BugsnagLog constructor.
      * @param array $config
-     *
-     * @return void
      */
     public function __construct(array $config = [])
     {
         parent::__construct($config);
 
-        $bugsnagFactory = new BugsnagFactory(true, $config);
+        $bugsnagFactory = new BugsnagFactory($this->config('notify'), $config);
         $bugsnag = $bugsnagFactory->factory();
 
         $this->setBugsnag($bugsnag);
@@ -100,5 +97,7 @@ class BugsnagLog extends BaseLog
         $this->_bugsnag->notifyError(ucfirst($level), $message, function (Report $report) use ($context) {
             $report->setContext($context);
         });
+
+        return true;
     }
 }
