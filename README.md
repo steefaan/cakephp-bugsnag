@@ -12,7 +12,7 @@ Provides as custom log engine for Bugsnag.
 
 ## Installation
 
-_[Using [Composer](http://getcomposer.org/)]_
+_Using [Composer](http://getcomposer.org/)_
 
 ```
 composer require steefaan/cakephp-bugsnag:^1.0
@@ -23,6 +23,23 @@ composer require steefaan/cakephp-bugsnag:^1.0
 Load the plugin in your app's `config/bootstrap.php` file:
 
 ```
+// ...
+
+$isCli = php_sapi_name() === 'cli';
+if ($isCli) {
+    $handler = new ConsoleErrorHandler(Configure::read('Error'));
+} else {
+    $handler = new ErrorHandler(Configure::read('Error'));
+}
+
+$bugsnagFactory = new BugsnagFactory(true, Configure::read('Bugsnag'));
+$bugsnagHandler = new BugsnagErrorHandler($bugsnagFactory, $handler);
+$bugsnagHandler->register();
+
+unset($bugsnagFactory, $bugsnagHandler, $handler);
+
+// ...
+
 Plugin::load('Steefaan/Bugsnag');
 ```
 
