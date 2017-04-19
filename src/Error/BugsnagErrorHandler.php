@@ -2,6 +2,8 @@
 
 namespace Steefaan\Bugsnag\Error;
 
+use Bugsnag\Client;
+use Bugsnag\Report;
 use Cake\Core\Configure;
 use Cake\Error\BaseErrorHandler;
 use Steefaan\Bugsnag\BugsnagFactory;
@@ -9,7 +11,7 @@ use Steefaan\Bugsnag\BugsnagFactory;
 class BugsnagErrorHandler extends BaseErrorHandler
 {
     /**
-     * @var \Bugsnag_Client|null
+     * @var \Bugsnag\Client|null
      */
     protected $_notifier;
 
@@ -20,13 +22,13 @@ class BugsnagErrorHandler extends BaseErrorHandler
 
     /**
      * BugsnagErrorHandler constructor.
-     * @param BugsnagFactory $bugsnagFactory
-     * @param BaseErrorHandler $handler
+     * @param \Bugsnag\Client $bugsnagFactory
+     * @param \Cake\Error\BaseErrorHandle $handler
      */
-    public function __construct(BugsnagFactory $bugsnagFactory, BaseErrorHandler $handler)
+    public function __construct(Client $bugsnag = null, BaseErrorHandler $handler)
     {
-        if ($bugsnagFactory->shouldNotify()) {
-            $this->_notifier = $bugsnagFactory->factory();
+        if ($bugsnag !== null) {
+            $this->_notifier = $bugsnag;
         }
 
         $this->_handler = $handler;
@@ -53,7 +55,9 @@ class BugsnagErrorHandler extends BaseErrorHandler
     public function handleError($code, $description, $file = null, $line = null, $context = null)
     {
         if ($this->_notifier !== null) {
-            $this->_notifier->notifyException(new \ErrorException($description, $code, 1, $file, $line));
+            $this->_notifier->notifyError('Error', $description, function (Report $report) {
+                $report->getStacktrace()->removeFrame(0);
+            });
         }
 
         return $this->_handler->handleError($code, $description, $file, $line, $context);

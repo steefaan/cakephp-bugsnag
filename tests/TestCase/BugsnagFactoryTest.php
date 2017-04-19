@@ -38,14 +38,13 @@ class BugsnagFactoryTest extends TestCase
      */
     public function testLog()
     {
-        $bugsnagFactory = new BugsnagFactory(true, [
+        $bugsnag = BugsnagFactory::factory(true, [
             'apiKey' => 'foobar',
             'releaseStage' => 'prod',
             'filters' => [],
             'notifier' => [],
         ]);
 
-        $this->assertTrue($bugsnagFactory->shouldNotify());
-        $this->assertInstanceOf(Client::class, $bugsnagFactory->factory());
+        $this->assertInstanceOf(Client::class, $bugsnag);
     }
 }

@@ -16,58 +16,42 @@ class BugsnagFactory
     protected static $_bugsnag;
 
     /**
-     * @var bool
-     */
-    protected $_notify = true;
-
-    /**
-     * @var array
-     */
-    protected $_config = [];
-
-    /**
-     * BugsnagFactory constructor.
      * @param bool $notify
      * @param array $config
+     *
+     * @return \Bugsnag\Client|null
      */
-    public function __construct($notify, array $config = [])
+    public static function factory($notify, array $config)
     {
-        $this->_notify = $notify;
-        $this->_config = $config;
-    }
+        if (self::$_bugsnag === false) {
+            return null;
+        }
 
-    /**
-     * @return bool
-     */
-    public function shouldNotify()
-    {
-        return $this->_notify;
-    }
+        if (self::$_bugsnag === null && $notify === false) {
+            self::$_bugsnag = false;
 
-    /**
-     * @return \Bugsnag\Client
-     */
-    public function factory()
-    {
+            return null;
+        }
+
         if (self::$_bugsnag instanceof Client) {
             return self::$_bugsnag;
         }
 
-        $bugsnag = Client::make($this->_config['apiKey']);
+        $bugsnag = Client::make($config['apiKey']);
 
         $bugsnagConfiguration = $bugsnag->getConfig();
-        $bugsnagConfiguration->setReleaseStage($this->_config['releaseStage']);
-        $bugsnagConfiguration->setFilters($this->_config['filters']);
-        $bugsnagConfiguration->setNotifier($this->_config['notifier']);
+        $bugsnagConfiguration->setReleaseStage($config['releaseStage']);
+        $bugsnagConfiguration->setFilters($config['filters']);
+        $bugsnagConfiguration->setNotifier($config['notifier']);
         $bugsnagConfiguration->setProjectRoot(ROOT);
 
         $bugsnag->registerCallback(function (Report $report) use ($bugsnag) {
-            $event = new Event('Log.Bugsnag.beforeNotify', $this, ['report' => $report]);
+            $event = new Event('Log.Bugsnag.beforeNotify', $bugsnag, ['report' => $report]);
 
             EventManager::instance()->dispatch($event);
         });
 
-        if ($this->shouldNotify()) {
+        if ($notify === true) {
             Handler::register($bugsnag);
         }
 

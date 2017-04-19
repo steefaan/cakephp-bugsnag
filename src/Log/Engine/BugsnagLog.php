@@ -10,6 +10,13 @@ use Steefaan\Bugsnag\BugsnagFactory;
 class BugsnagLog extends BaseLog
 {
     /**
+     * Dispatched reports.
+     *
+     * @var array
+     */
+    protected static $_dispatched = [];
+
+    /**
      * Default config.
      *
      * Please take a look to the bugsnag docs for a detailed
@@ -22,7 +29,6 @@ class BugsnagLog extends BaseLog
      * @var array
      */
     protected $_defaultConfig = [
-        'notify' => true,
         'levels' => [
             'error',
             'warning',
@@ -62,10 +68,7 @@ class BugsnagLog extends BaseLog
     {
         parent::__construct($config);
 
-        $bugsnagFactory = new BugsnagFactory($this->config('notify'), $config);
-        $bugsnag = $bugsnagFactory->factory();
-
-        $this->setBugsnag($bugsnag);
+        $this->_bugsnag = BugsnagFactory::factory(null, $config);
     }
 
     /**
@@ -92,12 +95,29 @@ class BugsnagLog extends BaseLog
      */
     public function log($level, $message, array $context = [])
     {
-        $level = isset($this->_levels[$level]) ? $this->_levels[$level] : 'info';
+        if ($this->_bugsnag === null) {
+            return false;
+        }
 
-        $this->_bugsnag->notifyError(ucfirst($level), $message, function (Report $report) use ($context) {
-            $report->setContext($context);
+        $this->_bugsnag->notifyError('Error', $message, function (Report $report) use ($context) {
+            for ($i = 0; $i < 5; $i++) {
+                $report->getStacktrace()->removeFrame(0);
+            }
+
+            preg_match('/^\w+ \(\d\):(.+?)\ in\ \[/', $report->getMessage(), $matches);
+
+            $report->setMessage(trim($matches[1]));
         });
 
         return true;
+    }
+
+    /**
+     * @param Report $report
+     * @return bool
+     */
+    public static function hasDispatchedReport(Report $report)
+    {
+        return isset(self::$_dispatched[spl_object_hash($report)]);
     }
 }
