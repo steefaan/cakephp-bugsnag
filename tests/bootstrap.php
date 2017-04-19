@@ -6,6 +6,6 @@ require_once 'vendor/autoload.php';
 
 require 'vendor/cakephp/cakephp/tests/bootstrap.php';
 
-Plugin::load('Bugsnag', [
+Plugin::load('Steefaan/Bugsnag', [
     'path' => dirname(dirname(__FILE__)) . DS
 ]);
