@@ -104,9 +104,14 @@ class BugsnagLog extends BaseLog
                 $report->getStacktrace()->removeFrame(0);
             }
 
-            preg_match('/^\w+ \(\d\):(.+?)\ in\ \[/', $report->getMessage(), $matches);
+            preg_match('/^[\w+\ \:]+? \(\d\):(.+?)\ in\ \[/', $report->getMessage(), $matches);
 
-            $report->setMessage(trim($matches[1]));
+            $message = $report->getMessage();
+            if (isset($matches[1])) {
+                $message = trim($matches[1]);
+            }
+
+            $report->setMessage($message);
         });
 
         return true;
