@@ -54,6 +54,20 @@ class BugsnagErrorHandler extends BaseErrorHandler
      */
     public function handleError($code, $description, $file = null, $line = null, $context = null)
     {
+        // Level is the current error reporting level to manage silent error.
+        // Strong errors are not authorized to be silenced.
+        $level = error_reporting() | E_RECOVERABLE_ERROR | E_USER_ERROR | E_DEPRECATED | E_USER_DEPRECATED;
+        $log = 0 & $code;
+
+        // 0x1FFF; // E_ALL - E_DEPRECATED - E_USER_DEPRECATED
+        $throw = 0x1FFF & $code & $level;
+
+        // 0x55; // E_ERROR + E_CORE_ERROR + E_COMPILE_ERROR + E_PARSE
+        $code &= $level | 0x55;
+        if (!$code || (!$log && !$throw)) {
+            return $code && $log;
+        }
+
         if ($this->_notifier !== null) {
             $this->_notifier->notifyError('Error', $description, function (Report $report) {
                 $report->getStacktrace()->removeFrame(0);
