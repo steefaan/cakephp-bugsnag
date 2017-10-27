@@ -111,6 +111,7 @@ class BugsnagLog extends BaseLog
                 $message = trim($matches[1]);
             }
 
+            $report->setMetaData($context);
             $report->setMessage($message);
         });
 
