@@ -111,6 +111,8 @@ class BugsnagLog extends BaseLog
                 $message = trim($matches[1]);
             }
 
+            $context = array_map($this->_getContextMapper(), $context);
+
             $report->setMetaData($context);
             $report->setMessage($message);
         });
@@ -125,5 +127,36 @@ class BugsnagLog extends BaseLog
     public static function hasDispatchedReport(Report $report)
     {
         return isset(self::$_dispatched[spl_object_hash($report)]);
+    }
+
+    /**
+     * Maps object instance as its instance name.
+     *
+     * @return \Closure
+     */
+    protected function _getArgMapper()
+    {
+        return function ($arg) {
+            if (is_object($arg)) {
+                $arg = get_class($arg);
+            }
+            return $arg;
+        };
+    }
+    /**
+     * Maps all object instances as their instance names.
+     *
+     * @return \Closure
+     */
+    protected function _getContextMapper()
+    {
+        $that = $this;
+
+        return function ($entry) use ($that) {
+            $args = array_map($that->_getArgMapper(), $entry);
+            $entry = $args;
+
+            return $entry;
+        };
     }
 }
