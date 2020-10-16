@@ -67,7 +67,7 @@ class BugsnagLog extends BaseLog
 
         $client = new Bugsnag_Client(Configure::read('Bugsnag.apiKey'));
 
-        foreach ($this->config() as $key => $value) {
+        foreach ($this->getConfig() as $key => $value) {
             $method = 'set' . ucfirst($key);
             if (method_exists($client, $method)) {
                 $client->{$method}($value);
