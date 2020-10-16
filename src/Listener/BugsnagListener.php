@@ -27,7 +27,7 @@ class BugsnagListener implements EventListenerInterface
      */
     public function beforeNotify(Event $event)
     {
-        $error = $event->data['error']; /* @var $error \Bugsnag_Error */
+        $error = $event->getData('error'); /* @var $error \Bugsnag_Error */
 
         $frames = array_slice($error->stacktrace->frames, 3);
         $error->stacktrace->frames = $frames;
