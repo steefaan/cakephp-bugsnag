@@ -3,6 +3,7 @@
 namespace Bugsnag\Log\Engine;
 
 use Bugsnag\Client;
+use Bugsnag\Handler;
 use Bugsnag\Report;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -74,6 +75,8 @@ class BugsnagLog extends BaseLog
             }
         }
 
+        Handler::register($client);
+
         $client->registerCallback(function (Report $report) {
             EventManager::instance()->dispatch(
                 new Event('Log.Bugsnag.beforeNotify', $this, ['report' => $report])
@@ -101,11 +104,11 @@ class BugsnagLog extends BaseLog
      *                        See Cake\Log\Log::$_levels for list of possible levels.
      * @param string $message The message you want to log.
      * @param array  $context Additional information about the logged message.
-     * @return bool success of write.
+     * @return void success of write.
      */
-    public function log($level, $message, array $context = []): bool
+    public function log($level, $message, array $context = []): void
     {
         $level = $this->_levels[$level] ?? 'info';
-        $this->client->notifyError(ucfirst($level), $message, $context, $level);
+        $this->client->notifyError(ucfirst($level), $message);
     }
 }

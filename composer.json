@@ -15,8 +15,8 @@
     ],
     "license": "MIT",
     "support": {
-        "source": "https://github.com/steefaan/cakephp-bugsnag",
-        "issues": "https://github.com/steefaan/cakephp-bugsnag/issues"
+        "source": "https://github.com/maartenvr98/cakephp-bugsnag",
+        "issues": "https://github.com/maartenvr98/cakephp-bugsnag/issues"
     },
     "require": {
         "php": ">=7.4",

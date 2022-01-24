@@ -17,10 +17,10 @@ composer require maartenvr98/cakephp-bugsnag:dev-master
 
 ### Enable plugin
 
-Load the plugin in your app's `config/bootstrap.php` file:
+Load the plugin in your app's `src/Application` file:
 
 ```
-Plugin::load('Bugsnag');
+$this->addPlugin('Bugsnag');
 ```
 
 ### Configuration
