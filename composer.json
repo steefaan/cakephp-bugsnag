@@ -11,6 +11,10 @@
         {
             "name": "Stefan Dickmann",
             "role": "Author"
+        },
+        {
+            "name": "Maarten",
+            "role": "Maintainer"
         }
     ],
     "license": "MIT",
