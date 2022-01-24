@@ -12,7 +12,7 @@ Provides as custom log engine for Bugsnag.
 _[Using [Composer](http://getcomposer.org/)]_
 
 ```
-composer require maartenvr98/cakephp-bugsnag:dev-master
+composer require steefaan/cakephp-bugsnag:dev-master
 ```
 
 ### Enable plugin
