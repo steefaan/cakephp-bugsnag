@@ -12,7 +12,7 @@ Provides as custom log engine for Bugsnag.
 _[Using [Composer](http://getcomposer.org/)]_
 
 ```
-composer require maartenvr98/cakephp-bugsnag:dev-master
+composer require maartenvr98/cakephp-bugsnag
 ```
 
 ### Enable plugin
@@ -29,9 +29,16 @@ Configure the API-Key for Bugsnag in your app's `config/app.php` file:
 
 ```
 'Bugsnag' => [
-    'apiKey' => 'YOUR_API_KEY'
+    'enabled'      => true,
+    'apiKey'       => 'YOUR_API_KEY',
+    'releaseStage' => 'development'
 ]
 ```
+
+For a complete list of all available options, please refer to [Bugsnag's documentation](https://bugsnag.com/docs/notifiers/php#additional-configuration). This plugin doesn't know any limitation, you can use all configuration settings which are listed in Bugsnag's documentation. Please keep in mind that you need to remove the `set` prefix for each Bugsnag option. `setFilters` becomes `filters`, `setReleaseStage` becomes `releaseStage` and so on.
+
+
+### Events
 
 If you want to modify the Bugsnag notification before you send it to the their API, you can do this easily with an event listener. You only need to listen to the following event:
 

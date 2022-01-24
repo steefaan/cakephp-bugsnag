@@ -26,13 +26,29 @@ class BugsnagErrorHandlerMiddleware implements MiddlewareInterface
      */
     public function __construct()
     {
-        $apiKey = Configure::read('Bugsnag.apiKey');
-        if (!$apiKey && env('BUGSNAG_API_KEY')) {
-            $apiKey = env('BUGSNAG_API_KEY');
-        }
+        $config = Configure::read('Bugsnag');
 
-        if ($apiKey) {
-            $this->setClient(Client::make($apiKey));
+        if ($config['enabled']) {
+            $apiKey = $config['apiKey'] ?? null;
+
+            if (!$apiKey && env('BUGSNAG_API_KEY')) {
+                $apiKey = env('BUGSNAG_API_KEY');
+            }
+
+            if ($apiKey) {
+                $client = Client::make($apiKey);
+
+                // Set all custom methods
+                foreach ($config as $key => $value) {
+                    $method = 'set' . ucfirst($key);
+                    if (method_exists($client, $method)) {
+                        $client->{$method}($value);
+                    }
+                }
+
+                $this->setClient($client);
+            }
+
         }
     }
 
