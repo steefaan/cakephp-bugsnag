@@ -16,16 +16,16 @@ class BugsnagLogTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         Configure::write('Bugsnag.apiKey', 'test');
 
         $this->client = $this->getMockBuilder('Bugsnag_Client')
-            ->setConstructorArgs(['test'])
-            ->setMethods(['notifyError'])
-            ->getMock();
+                             ->setConstructorArgs(['test'])
+                             ->setMethods(['notifyError'])
+                             ->getMock();
     }
 
     /**
@@ -33,7 +33,7 @@ class BugsnagLogTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         Configure::delete('Bugsnag.apiKey');
 

@@ -2,8 +2,8 @@
 
 namespace Bugsnag\Log\Engine;
 
-use Bugsnag_Client;
-use Bugsnag_Error;
+use Bugsnag\Client;
+use Bugsnag\Report;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
@@ -37,23 +37,23 @@ class BugsnagLog extends BaseLog
      *
      * @var array
      */
-    protected $_levels = [
+    protected array $_levels = [
         'emergency' => 'error',
-        'alert' => 'error',
-        'critical' => 'error',
-        'error' => 'error',
-        'warning' => 'warning',
-        'notice' => 'warning',
-        'info' => 'info',
-        'debug' => 'info'
+        'alert'     => 'error',
+        'critical'  => 'error',
+        'error'     => 'error',
+        'warning'   => 'warning',
+        'notice'    => 'warning',
+        'info'      => 'info',
+        'debug'     => 'info'
     ];
 
     /**
      * Client instance.
      *
-     * @var \Bugsnag_Client
+     * @var \Bugsnag\Client|null
      */
-    protected $_client = null;
+    protected ?Client $client = null;
 
     /**
      * Constructor.
@@ -65,7 +65,7 @@ class BugsnagLog extends BaseLog
     {
         parent::__construct($config);
 
-        $client = new Bugsnag_Client(Configure::read('Bugsnag.apiKey'));
+        $client = Client::make(Configure::read('Bugsnag.apiKey'));
 
         foreach ($this->getConfig() as $key => $value) {
             $method = 'set' . ucfirst($key);
@@ -74,9 +74,10 @@ class BugsnagLog extends BaseLog
             }
         }
 
-        $client->setBeforeNotifyFunction(function(Bugsnag_Error $error) {
-            $event = new Event('Log.Bugsnag.beforeNotify', $this, ['error' => $error]);
-            EventManager::instance()->dispatch($event);
+        $client->registerCallback(function (Report $report) {
+            EventManager::instance()->dispatch(
+                new Event('Log.Bugsnag.beforeNotify', $this, ['report' => $report])
+            );
         });
 
         $this->setClient($client);
@@ -85,26 +86,26 @@ class BugsnagLog extends BaseLog
     /**
      * Set client instance.
      *
-     * @param Bugsnag_Client $client
+     * @param Client $client
      * @return void
      */
-    public function setClient(Bugsnag_Client $client)
+    public function setClient(Client $client)
     {
-        $this->_client = $client;
+        $this->client = $client;
     }
 
     /**
      * Send log to Bugsnag.
      *
-     * @param string $level The severity level of the message being written.
-     *    See Cake\Log\Log::$_levels for list of possible levels.
+     * @param string $level   The severity level of the message being written.
+     *                        See Cake\Log\Log::$_levels for list of possible levels.
      * @param string $message The message you want to log.
-     * @param array $context Additional information about the logged message.
+     * @param array  $context Additional information about the logged message.
      * @return bool success of write.
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): bool
     {
-        $level = isset($this->_levels[$level]) ? $this->_levels[$level] : 'info';
-        $this->_client->notifyError(ucfirst($level), $message, $context, $level);
+        $level = $this->_levels[$level] ?? 'info';
+        $this->client->notifyError(ucfirst($level), $message, $context, $level);
     }
 }

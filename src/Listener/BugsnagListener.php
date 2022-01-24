@@ -12,7 +12,7 @@ class BugsnagListener implements EventListenerInterface
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'Log.Bugsnag.beforeNotify' => 'beforeNotify'
@@ -27,9 +27,7 @@ class BugsnagListener implements EventListenerInterface
      */
     public function beforeNotify(Event $event)
     {
-        $error = $event->getData('error'); /* @var $error \Bugsnag_Error */
-
-        $frames = array_slice($error->stacktrace->frames, 3);
-        $error->stacktrace->frames = $frames;
+        /** @var \Bugsnag\Report $report */
+        $report = $event->getData('report');
     }
 }

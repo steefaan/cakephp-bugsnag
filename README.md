@@ -1,21 +1,18 @@
 # Bugsnag Plugin
 
-[![Build Status](https://travis-ci.org/steefaan/cakephp-bugsnag.svg?branch=master)](https://travis-ci.org/steefaan/cakephp-bugsnag)
-[![codecov.io](https://codecov.io/github/steefaan/cakephp-bugsnag/coverage.svg?branch=master)](https://codecov.io/github/steefaan/cakephp-bugsnag?branch=master)
-
 Provides as custom log engine for Bugsnag.
 
 ## Requirements
 
-* CakePHP 3.x
-* PHP 5.4.16 or greater
+* CakePHP 4.x
+* PHP 7.4 or greater
 
 ## Installation
 
 _[Using [Composer](http://getcomposer.org/)]_
 
 ```
-composer require steefaan/cakephp-bugsnag:dev-master
+composer require maartenvr98/cakephp-bugsnag:dev-master
 ```
 
 ### Enable plugin
