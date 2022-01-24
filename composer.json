@@ -1,5 +1,5 @@
 {
-    "name": "steefaan/cakephp-bugsnag",
+    "name": "maartenvr98/cakephp-bugsnag",
     "type": "cakephp-plugin",
     "description": "Bugsnag log engine for CakePHP.",
     "keywords": [
