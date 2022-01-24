@@ -15,7 +15,7 @@ class Plugin extends BasePlugin
 {
     protected $routesEnabled     = false;
     protected $bootstrapEnabled  = false;
-    protected $middlewareEnabled = false;
+    protected $middlewareEnabled = true;
 
     /**
      * Set up the middleware queue your application will use.
@@ -25,7 +25,7 @@ class Plugin extends BasePlugin
      */
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
-        return $this->middleware($middlewareQueue)
-                    ->add(new BugsnagErrorHandlerMiddleware());
+        return parent::middleware($middlewareQueue)
+                     ->add(BugsnagErrorHandlerMiddleware::class);
     }
 }

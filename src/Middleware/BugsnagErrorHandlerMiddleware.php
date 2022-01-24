@@ -4,6 +4,8 @@ namespace Bugsnag\Middleware;
 
 use Bugsnag\Client;
 use Cake\Core\Configure;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -63,6 +65,13 @@ class BugsnagErrorHandlerMiddleware implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (Throwable $exception) {
+            // Send event
+            EventManager::instance()->dispatch(new Event('Log.Bugsnag.beforeNotify', $this, [
+                'client'    => $this->client,
+                'exception' => $exception
+            ]));
+
+            // Notify exception
             $this->client->notifyException($exception);
 
             throw $exception;

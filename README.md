@@ -5,7 +5,7 @@ Provides as custom log engine for Bugsnag.
 ## Requirements
 
 * CakePHP 4.x
-* PHP 7.4 or greater
+* PHP 8.x
 
 ## Installation
 
@@ -32,25 +32,6 @@ Configure the API-Key for Bugsnag in your app's `config/app.php` file:
     'apiKey' => 'YOUR_API_KEY'
 ]
 ```
-
-### Usage
-
-Straight forward API usage for Bugsnag and a custom log engine for CakePHP makes it surprisingly easy to implement the plugin to a new or even to an existing project. As usual and described in [CakePHP's documentation](http://book.cakephp.org/3.0/en/core-libraries/logging.html#logging-configuration) you can configure the log engine as follows:
-
-```
-'Log' => [
-    'bugsnag' => [
-        'className' => 'Bugsnag\Log\Engine\BugsnagLog',
-        'releaseStage' => 'development',
-        'filters' => [
-            'password'
-        ]
-        ... more options
-    ]
-],
-```
-
-For a complete list of all available options, please refer to [Bugsnag's documentation](https://bugsnag.com/docs/notifiers/php#additional-configuration). This plugin doesn't know any limitation, you can use all configuration settings which are listed in Bugsnag's documentation. Please keep in mind that you need to remove the `set` prefix for each Bugsnag option. `setFilters` becomes `filters`, `setReleaseStage` becomes `releaseStage` and so on.
 
 If you want to modify the Bugsnag notification before you send it to the their API, you can do this easily with an event listener. You only need to listen to the following event:
 
